@@ -1,0 +1,53 @@
+service: gods-eye
+
+frameworkVersion: '3'
+
+package:
+  exclude:
+    - node_modules/**
+    - env/
+    - .serverless
+    
+provider:
+  name: aws
+  region: us-east-1
+  runtime: python3.9
+  environment:
+    OPEN_WEATHER_API_URL: "https://api.openweathermap.org/data/2.5/weather"
+    OPEN_WEATHER_API_KEY: "d28f57a0fb0d01a55d9526f463a9bac3"
+    GEO_API_URL: "http://api.openweathermap.org/geo/1.0/direct"
+    OPEN_WEATHER_API_DAILY_URL: "http://api.openweathermap.org/data/2.5/forecast"
+
+resources:
+  Resources:
+    NotificationTopic:
+      Type: AWS::SNS::Topic
+      Properties:
+        DisplayName: NotifierTopic
+        TopicName: NotifierTopic
+
+    EventBus:
+      Type: AWS::Events::EventBus
+      Properties:
+        Name: NotifierEvent
+
+    EventRule:
+      Type: AWS::Events::Rule
+      Properties:
+        EventBusName: NotifierEvent
+        EventPattern:
+          source:
+            - com.almeidadealmeida.godseye
+        Name: NotifierRule
+        ScheduleExpression:
+        State: "ENABLED"
+        Targets:
+          - Arn: !Ref NotificationTopic
+            Id: "SNSTarget"
+
+functions:
+  hello:
+    handler: handler.notifier
+
+plugins:
+  - serverless-python-requirements
