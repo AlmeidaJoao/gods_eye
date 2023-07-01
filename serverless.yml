@@ -3,9 +3,11 @@ service: gods-eye
 frameworkVersion: "3"
 
 package:
-  exclude:
-    - node_modules/**
-    - env/
+  patterns:
+    - "!node_modules/**"
+    - "!package-lock.json"
+    - "!environment/**"
+    - ".idea/**"
 
 provider:
   name: aws
@@ -16,6 +18,12 @@ provider:
     OPEN_WEATHER_API_KEY: "d28f57a0fb0d01a55d9526f463a9bac3"
     GEO_API_URL: "http://api.openweathermap.org/geo/1.0/direct"
     OPEN_WEATHER_API_DAILY_URL: "http://api.openweathermap.org/data/2.5/forecast"
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action: "events:PutEvents"
+          Resource: "*"
 
 resources:
   Resources:
