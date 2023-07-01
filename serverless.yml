@@ -27,21 +27,28 @@ provider:
 
 resources:
   Resources:
-    mysnspolicy:
+
+    NotificationTopic:
+      Type: AWS::SNS::Topic
+      Properties:
+        DisplayName: NotifierTopic
+        TopicName: NotifierTopic
+
+    SNSPolicy:
       Type: AWS::SNS::TopicPolicy
       Properties:
         PolicyDocument:
-          Version: "2008-10-17"
-          Id: "__default_policy_ID"
+          Version: '2008-10-17'
+          Id: '__default_policy_ID'
           Statement:
-            - Sid: "AWSEvents_gods_eye_rule_Idfee98b8b-d304-4581-aa6a-ba131a7048f5"
-              Effect: "Allow"
-              Principal:
-                Service: "events.amazonaws.com"
-              Action: "sns:Publish"
-              Resource: "arn:aws:sns:us-east-1:391545279936:NotifierTopic"
+          - Sid: 'AWSEvents_gods_eye_rule_Idfee98b8b-d304-4581-aa6a-ba131a7048f5'
+            Effect: 'Allow'
+            Principal:
+              Service: events.amazonaws.com
+            Action: sns:Publish
+            Resource: "arn:aws:sns:us-east-1:967906495397:NotifierTopic"
         Topics:
-          - !Ref NotifierTopic
+        - !Ref NotificationTopic
 
     EventBus:
       Type: AWS::Events::EventBus
