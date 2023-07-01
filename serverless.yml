@@ -27,11 +27,21 @@ provider:
 
 resources:
   Resources:
-    NotificationTopic:
-      Type: AWS::SNS::Topic
+    mysnspolicy:
+      Type: AWS::SNS::TopicPolicy
       Properties:
-        DisplayName: NotifierTopic
-        TopicName: NotifierTopic
+        PolicyDocument:
+          Version: "2008-10-17"
+          Id: "__default_policy_ID"
+          Statement:
+            - Sid: "AWSEvents_gods_eye_rule_Idfee98b8b-d304-4581-aa6a-ba131a7048f5"
+              Effect: "Allow"
+              Principal:
+                Service: "events.amazonaws.com"
+              Action: "sns:Publish"
+              Resource: "arn:aws:sns:us-east-1:391545279936:NotifierTopic"
+        Topics:
+          - !Ref NotifierTopic
 
     EventBus:
       Type: AWS::Events::EventBus
@@ -58,6 +68,3 @@ functions:
 
 plugins:
   - serverless-python-requirements
-custom:
-  pythonRequirements:
-    dockerizePip: non-linux
