@@ -1,13 +1,12 @@
 service: gods-eye
 
-frameworkVersion: '3'
+frameworkVersion: "3"
 
 package:
   exclude:
     - node_modules/**
     - env/
-    - .serverless
-    
+
 provider:
   name: aws
   region: us-east-1
@@ -51,3 +50,6 @@ functions:
 
 plugins:
   - serverless-python-requirements
+custom:
+  pythonRequirements:
+    dockerizePip: non-linux

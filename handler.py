@@ -68,7 +68,7 @@ def notifier(event, context):
                             "Resources": [],
                             "DetailType": "weather", 
                             "Detail": json.dumps(data),
-                            "EventBusName": "arn:aws:events:us-east-1:967906495397:event-bus/NotifierEvent"
+                            "EventBusName": "arn:aws:events:us-east-1:391545279936:event-bus/NotifierEvent"
                             # "EventBusName": service_name
                         }
                     ]
