@@ -23,13 +23,12 @@ provider:
       statements:
         - Effect: Allow
           Action:
-          - "events:PutEvents"
-          - "events:ListEventBuses"
+            - "events:PutEvents"
+            - "events:ListEventBuses"
           Resource: "*"
 
 resources:
   Resources:
-
     NotificationTopic:
       Type: AWS::SNS::Topic
       Properties:
@@ -40,17 +39,17 @@ resources:
       Type: AWS::SNS::TopicPolicy
       Properties:
         PolicyDocument:
-          Version: '2008-10-17'
-          Id: 'topic_policy'
+          Version: "2008-10-17"
+          Id: "topic_policy"
           Statement:
-          - Sid: 'AWSEvents_gods_eye_rule'
-            Effect: 'Allow'
-            Principal:
-              Service: events.amazonaws.com
-            Action: sns:Publish
-            Resource: !Ref NotificationTopic
+            - Sid: "AWSEvents_gods_eye_rule"
+              Effect: "Allow"
+              Principal:
+                Service: events.amazonaws.com
+              Action: sns:Publish
+              Resource: !Ref NotificationTopic
         Topics:
-        - !Ref NotificationTopic
+          - !Ref NotificationTopic
 
     EventBus:
       Type: AWS::Events::EventBus
@@ -70,10 +69,17 @@ resources:
         Targets:
           - Arn: !Ref NotificationTopic
             Id: "SNSTarget"
-
 functions:
   notifier:
     handler: handler.notifier
+    events:
+      - schedule:
+          name: NotififierScheduler
+          method: scheduler
+          description: "Rate of event trigger"
+          timezone: Africa/Johannesburg
+          rate: rate(2 minutes)
+          enabled: true
 
 plugins:
   - serverless-python-requirements
