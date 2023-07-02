@@ -6,7 +6,7 @@ package:
   patterns:
     - "!node_modules/**"
     - "!package-lock.json"
-    - "!environment/**"
+    - "!.venv/**"
     - ".idea/**"
 
 provider:
@@ -22,7 +22,9 @@ provider:
     role:
       statements:
         - Effect: Allow
-          Action: "events:PutEvents"
+          Action:
+          - "events:PutEvents"
+          - "events:ListEventBuses"
           Resource: "*"
 
 resources:
@@ -39,14 +41,14 @@ resources:
       Properties:
         PolicyDocument:
           Version: '2008-10-17'
-          Id: '__default_policy_ID'
+          Id: 'topic_policy'
           Statement:
-          - Sid: 'AWSEvents_gods_eye_rule_Idfee98b8b-d304-4581-aa6a-ba131a7048f5'
+          - Sid: 'AWSEvents_gods_eye_rule'
             Effect: 'Allow'
             Principal:
               Service: events.amazonaws.com
             Action: sns:Publish
-            Resource: "arn:aws:sns:us-east-1:967906495397:NotifierTopic"
+            Resource: !Ref NotificationTopic
         Topics:
         - !Ref NotificationTopic
 
@@ -70,7 +72,7 @@ resources:
             Id: "SNSTarget"
 
 functions:
-  hello:
+  notifier:
     handler: handler.notifier
 
 plugins:
